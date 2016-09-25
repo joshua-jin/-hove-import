@@ -18,12 +18,15 @@ class ActiveGambleAppCountExecutor(taskIndex: Int, threadBound: Int, filePrefix:
     if (dataArray.length >= 2) {
       val imeiMD5Str = dataArray(0)
       val activeAppCount = dataArray(1)
-
-      val p = new Put(Hex.decodeHex(imeiMD5Str.toCharArray))
-      p.add(fCommonColumn, Bytes.toBytes("active-gamble-app-count"), Bytes.toBytes(activeAppCount))
-      puts.add(p)
-      return (putIndex + 1, noDataCount)
+      try {
+        val p = new Put(Hex.decodeHex(imeiMD5Str.toCharArray))
+        p.add(fCommonColumn, Bytes.toBytes("active-gamble-app-count"), Bytes.toBytes(activeAppCount))
+        puts.add(p)
+        return (1, 0)
+      } catch {
+        case e: Exception => println(s"""error md5: ${imeiMD5Str}""")
+      }
     }
-    (putIndex, noDataCount + 1)
+    (0, 1)
   }
 }
