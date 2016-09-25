@@ -1,19 +1,20 @@
 package cn.finance.hove.dataimport
 
-import java.net.URL
+import com.roundeights.hasher.Implicits._
+import org.apache.commons.codec.binary.Hex
 
-import scala.io.Source
+import scala.language.postfixOps
 
 object MainTest {
   def main(args: Array[String]): Unit = {
-    val source =
-        Source.fromInputStream(Thread.currentThread().getContextClassLoader.getResourceAsStream("test.csv"))
-    source.getLines().foreach(line => {
+    val md5Bytes = "hello".md5.bytes
+    println(Hex.encodeHexString(md5Bytes))
 
-    })
-    source.close()
-    val aURL = new URL("http://example.com:80/docs/books/tutorial"
-      + "/index.html?name=networking#DOWNLOADING");
-    println(aURL.getHost())
+    val md5Str = "5d41402abc4b2a76b9719d911017c592"
+    println(md5Bytes sameElements Hex.decodeHex(md5Str.toCharArray))
+
+    val b = Hex.decodeHex(md5Str.toCharArray)
+    println(b.mkString(","))
+    println(md5Bytes.mkString(","))
   }
 }

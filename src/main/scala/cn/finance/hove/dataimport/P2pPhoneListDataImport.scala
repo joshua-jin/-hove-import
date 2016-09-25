@@ -1,7 +1,6 @@
 package cn.finance.hove.dataimport
 
 import java.io.File
-import java.util
 
 import org.apache.hadoop.hbase.TableName
 import org.apache.hadoop.hbase.client.Put
@@ -21,7 +20,7 @@ object P2pPhoneListDataImport {
     val source = Source.fromFile(file)
     var countIndex = 0
 
-    val putsList = new util.ArrayList[Put]()
+    val putsList = new java.util.ArrayList[Put]()
 
     source.getLines().foreach(line => {
       if (line.trim != "") {

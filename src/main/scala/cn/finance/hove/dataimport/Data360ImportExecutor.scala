@@ -1,7 +1,6 @@
 package cn.finance.hove.dataimport
 
 import java.io.File
-import java.util
 
 import org.apache.hadoop.hbase.TableName
 import org.apache.hadoop.hbase.client.Put
@@ -19,7 +18,7 @@ class Data360ImportExecutor(val taskIndex: Int, val threadBound: Int, val filePr
 
   def doImport(file: File): Unit = {
     val sourceFile = Source.fromFile(file)
-    val putsList = new util.ArrayList[Put]()
+    val putsList = new java.util.ArrayList[Put]()
     var putsActionIndex = 0
     var importCount = 0
     val fileName = file.getName
