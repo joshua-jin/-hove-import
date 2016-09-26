@@ -1,13 +1,20 @@
 package cn.finance.hove.dataimport
 
 import cn.finance.hove.dataimport.common.CommonDataImport
-import cn.finance.hove.dataimport.executor.ActiveGambleAppCountExecutor
+import cn.finance.hove.dataimport.executor.{ActiveGambleAppCountExecutor, OnlineGambleUrlExecutor}
 
 object Main {
   def main(args: Array[String]): Unit = {
     args match {
-      case Array("user-360-var", filePrefix: String, threadCount: String) => {
-        Pre360DataImport.importData(filePrefix, threadCount)
+      case Array("user-online-gambling-url", filePrefix: String, threadCount: String) => {
+        CommonDataImport.importData(filePrefix, threadCount)(provider = (tc: Int, tb: Int, fp: String) => {
+          new OnlineGambleUrlExecutor(tc, tb, fp)
+        })
+      }
+      case Array("user-loan-app-count", filePrefix: String, threadCount: String) => {
+        CommonDataImport.importData(filePrefix, threadCount)(provider = (tc: Int, tb: Int, fp: String) => {
+          new OnlineGambleUrlExecutor(tc, tb, fp)
+        })
       }
       case Array("white-list-sms", filePrefix: String, threadCount: String) => {
         WhiteListSMSDataImport.importData(filePrefix, threadCount)
