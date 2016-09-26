@@ -36,43 +36,39 @@ object BlackNameImport {
 
     println(s"begin to import $fileName")
 
-    def importIdNumRowkey(name: String,mobile: Match, nameIdNoRowKey: Array[Byte]): Boolean = {
-      val p = new Put(nameIdNoRowKey)
+    def createPut(name: String,mobile: String, idNo:String, rowkey: Array[Byte]) = {
+      val p = new Put(rowkey)
       p.add(fCommoncolumn, nameColumn, Bytes.toBytes(name))
-      p.add(fCommoncolumn, idNoColumn, Bytes.toBytes(mobile.toString()))
-      p.add(fCommoncolumn, uncredited, Bytes.toBytes(true))
+      if(idNo != null){
+        p.add(fCommoncolumn, idNoColumn, Bytes.toBytes(idNo))
+      }
+      if(mobile != null){
+        p.add(fCommoncolumn, mobileColumn, Bytes.toBytes(mobile))
+      }
+      p.add(fCommoncolumn, uncredited, Bytes.toBytes("true"))
       putList.add(p)
     }
 
-    def importMobileRowkey(name: String, mobile: Match, nameMobileRowKey: Array[Byte]): Boolean = {
-      val p = new Put(nameMobileRowKey)
-      p.add(fCommoncolumn, nameColumn, Bytes.toBytes(name))
-      p.add(fCommoncolumn, mobileColumn, Bytes.toBytes(mobile.toString()))
-      p.add(fCommoncolumn, uncredited, Bytes.toBytes(true))
-      putList.add(p)
-    }
-
-    def isValidData(name: String, idNum: Match, mobileNum: Match): Boolean = {
+    def isValidData(name: String, idNum: String, mobileNum: String): Boolean = {
       name != "" && (mobileNum != null || idNum != null)
     }
 
-    sourceFile.getLines().foreach(line => {
+    sourceFile.getLines().filter(x =>{ x.split(",").length >= 3}).foreach(line => {
       val dataArray = line.split(",")
       val name = dataArray(0)
       val idNo = dataArray(1)
       val mobile = dataArray(2)
 
-
       val idNumRegex: Iterator[Match] = idNoRegex.findAllMatchIn(idNo)
-      var idNum:Match = null
+      var idNum:String = null
       if (idNumRegex.hasNext){
-        idNum = idNumRegex.next()
+        idNum = idNumRegex.next().toString()
       }
 
       val mobileNumRegex: Iterator[Match] = mobileRegex.findAllMatchIn(mobile)
-      var mobileNum:Match = null
+      var mobileNum:String = null
       if (mobileNumRegex.hasNext){
-        mobileNum = mobileNumRegex.next()
+        mobileNum = mobileNumRegex.next().toString()
       }
 
       if (isValidData(name, idNum, mobileNum)){
@@ -80,12 +76,12 @@ object BlackNameImport {
         if (idNum != null  ){
           val idNoDataKey = idNum.toString().sha1.bytes
           val nameIdNumRowKey = nameDataKey ++ idNoDataKey
-          importIdNumRowkey(name, idNum, nameIdNumRowKey)
+          createPut(name, mobileNum, idNum, nameIdNumRowKey)
         }
         if (mobileNum != null) {
           val mobileDateKey = mobileNum.toString().sha1.bytes
           val nameMobileNumRowkey = nameDataKey ++ mobileDateKey
-          importMobileRowkey(name, mobileNum, nameMobileNumRowkey)
+          createPut(name, mobileNum, idNum, nameMobileNumRowkey)
         }
         if (putActionIndex > 0 && putActionIndex % 500 == 0) {
           table.mutate(putList) //Batch import
@@ -96,6 +92,7 @@ object BlackNameImport {
       } else {
         noDataCount += 1
       }
+
 })
 
     if (!putList.isEmpty){
