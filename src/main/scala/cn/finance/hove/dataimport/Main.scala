@@ -1,7 +1,7 @@
 package cn.finance.hove.dataimport
 
 import cn.finance.hove.dataimport.common.CommonDataImport
-import cn.finance.hove.dataimport.executor.{ActiveGambleAppCountExecutor, OnlineGambleUrlExecutor}
+import cn.finance.hove.dataimport.executor.{ActiveGambleAppCountExecutor, OnlineGambleUrlExecutor, UserLoanAppExecutor}
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -13,7 +13,7 @@ object Main {
       }
       case Array("user-loan-app-count", filePrefix: String, threadCount: String) => {
         CommonDataImport.importData(filePrefix, threadCount)(provider = (tc: Int, tb: Int, fp: String) => {
-          new OnlineGambleUrlExecutor(tc, tb, fp)
+          new UserLoanAppExecutor(tc, tb, fp)
         })
       }
       case Array("white-list-sms", filePrefix: String, threadCount: String) => {
