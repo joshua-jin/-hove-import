@@ -24,7 +24,7 @@ class OnlineGambleUrlExecutor(taskIndex: Int, threadBound: Int, filePrefix: Stri
         puts.add(p)
         return (1, 0)
       } catch {
-        case e: Exception => println(s"""error md5: ${imeiMD5Str}""")
+        case e: Exception => println(s"""error md5: $imeiMD5Str""")
       }
     }
     (0, 1)
