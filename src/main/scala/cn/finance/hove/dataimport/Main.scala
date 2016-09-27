@@ -32,10 +32,10 @@ object Main {
         })
       }
       case Array("external-blacklist",file:String) => {
-        BlackNameImport.doImport("external-blacklist",new File(file))
+        BlackListImport.doImport("external-blacklist", new File(file))
       }
       case Array("dailianmeng-blacklist",file:String) => {
-        BlackNameImport.doImport("dailianmeng-blacklist",new File(file))
+        BlackListImport.doImport("dailianmeng-blacklist", new File(file))
       }
       case _ => {
         println("Arguments is not correct...")
