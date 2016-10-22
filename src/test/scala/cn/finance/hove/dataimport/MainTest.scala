@@ -2,6 +2,7 @@ package cn.finance.hove.dataimport
 
 import com.roundeights.hasher.Implicits._
 import org.apache.commons.codec.binary.Hex
+import org.apache.hadoop.hbase.util.Bytes
 
 import scala.language.postfixOps
 
@@ -16,5 +17,11 @@ object MainTest {
     val b = Hex.decodeHex(md5Str.toCharArray)
     println(b.mkString(","))
     println(md5Bytes.mkString(","))
+
+    val imei = "867323026308799"
+    println(imei.md5.hex)
+    val imeiMD5Str = "1c6517a58d241a72024199cf52010cd3"
+    println(imei.md5.hex == imeiMD5Str)
+    println(Bytes.toStringBinary(Hex.decodeHex(imeiMD5Str.toCharArray)))
   }
 }

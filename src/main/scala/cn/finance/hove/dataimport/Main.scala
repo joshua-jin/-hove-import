@@ -1,7 +1,7 @@
 package cn.finance.hove.dataimport
 
 import cn.finance.hove.dataimport.common.CommonDataImport
-import cn.finance.hove.dataimport.executor.{ActiveGambleAppCountExecutor, OnlineGambleUrlExecutor, UserLoanAppExecutor}
+import cn.finance.hove.dataimport.executor.{ActiveGambleAppCountExecutor, CollectionPhoneExecutor, OnlineGambleUrlExecutor, UserLoanAppExecutor}
 import java.io.File
 
 object Main {
@@ -31,11 +31,16 @@ object Main {
           new ActiveGambleAppCountExecutor(tc, tb, fp)
         })
       }
-      case Array("external-blacklist",file:String) => {
+      case Array("external-blacklist", file:String) => {
         BlackListImport.doImport("external-blacklist", new File(file))
       }
       case Array("dailianmeng-blacklist",file:String) => {
         BlackListImport.doImport("dailianmeng-blacklist", new File(file))
+      }
+      case Array("collection-phone", file: String, filePrefix: String, threadCount: String) => {
+        CommonDataImport.importData(filePrefix, threadCount)(provider = (tc: Int, tb: Int, fp: String) => {
+          new CollectionPhoneExecutor(tc, tb, fp)
+        })
       }
       case _ => {
         println("Arguments is not correct...")
