@@ -29,7 +29,7 @@ object BlackListImport {
      var totalPutCount = 0
      val fileName =file.getName
 
-     val idNoRegex = new Regex("[\\d\\*xX]{15,18}")
+     val idNoRegex = new Regex("[\\d\\*xX]{15,19}")
      val mobileRegex = new Regex("1[\\d\\*]{10}")
 
      val lines = sourceFile.getLines()
