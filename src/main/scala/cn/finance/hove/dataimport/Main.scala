@@ -36,14 +36,27 @@ object Main {
       case Array("dailianmeng-blacklist",file:String) =>
         BlackListImport.doImport("dailianmeng-blacklist", new File(file))
 
-      case Array("collection-phone", file: String, filePrefix: String, threadCount: String) =>
+      case Array("collection-phone", filePrefix: String, threadCount: String) =>
         CommonDataImport.importData(filePrefix, threadCount)(provider = (tc: Int, tb: Int, fp: String) => {
           CollectionPhoneExecutor(tc, tb, fp)
         })
 
       case Array("device-collection-rate", file:String) => DeviceCollectionCallingRateImport.doImport(new File(file))
 
-      case _ =>  println("Arguments is not correct...")
+      case _ =>
+        println("")
+        println("You can use \"hove-import\" like this:")
+        println("-----------------------------------------------------------------------------------------------------")
+        println("user-online-gambling-url <filePrefix> <threadCount>")
+        println("user-loan-app-count <filePrefix> <threadCount>")
+        println("white-list-sms <filePrefix> <threadCount>")
+        println("white-list-score <filePrefix> <threadCount>")
+        println("user-active-gamble-app <filePrefix> <threadCount>")
+        println("collection-phone <filePrefix> <threadCount>")
+        println("p2p-phone-list <fileName>")
+        println("external-blacklist <fileName>")
+        println("dailianmeng-blacklist <fileName>")
+        println("device-collection-rate <fileName>")
     }
   }
 }
